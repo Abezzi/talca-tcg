@@ -24,14 +24,14 @@ export function Sidebar({ session }: SidebarProps) {
   };
 
   return (
-    <aside className="group fixed top-0 right-0 z-50 flex h-full w-20 flex-col items-center justify-between bg-black/20 py-8 backdrop-blur-md transition-all duration-300 hover:w-64 hover:bg-black/40">
+    <aside className="group fixed top-0 right-0 z-50 flex h-full w-20 flex-col items-center justify-between bg-black/50 py-8 backdrop-blur-md transition-all duration-300 hover:w-64 hover:bg-black/80">
       <div className="flex w-full flex-col items-center gap-8">
         {/* Avatar */}
         <Link
           href={session ? "/profile" : "/api/auth/signin"}
           className="flex flex-col items-center gap-3 px-4"
         >
-          <div className="relative h-16 w-16 overflow-hidden rounded-full ring-4 ring-white/20 transition-all group-hover:ring-white/40">
+          <div className="relative h-16 w-16 overflow-hidden rounded-full ring-4 ring-green-800 transition-all">
             {session?.user?.image ? (
               <Image
                 src={session.user.image}
@@ -58,7 +58,7 @@ export function Sidebar({ session }: SidebarProps) {
             )}
           </div>
 
-          <span className="max-w-0 overflow-hidden text-sm font-medium whitespace-nowrap opacity-0 transition-all duration-300 group-hover:max-w-xs group-hover:opacity-100">
+          <span className="max-w-0 overflow-hidden text-sm font-medium whitespace-nowrap text-white opacity-0 transition-all duration-300 group-hover:max-w-xs group-hover:opacity-100">
             {session?.user?.name ?? "Sign in"}
           </span>
         </Link>
@@ -68,7 +68,7 @@ export function Sidebar({ session }: SidebarProps) {
           {/* Play */}
           <Link
             href="/play"
-            className={`${isActive("/deck") ? "bg-white/20 ring-2 ring-white/50" : "hover:bg-white/10"} flex w-full items-center justify-center rounded-lg px-6 py-3 transition group-hover:justify-start hover:bg-white/10`}
+            className={`${isActive("/play") ? "bg-white/20 ring-2 ring-white/50" : "hover:bg-white/10"} flex w-full items-center justify-center rounded-lg px-6 py-3 text-white transition group-hover:justify-start hover:bg-white/10`}
           >
             <svg
               className="h-6 w-6 shrink-0"
@@ -89,7 +89,7 @@ export function Sidebar({ session }: SidebarProps) {
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-            <span className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:ml-3 group-hover:max-w-xs group-hover:opacity-100">
+            <span className="max-w-0 overflow-hidden whitespace-nowrap text-white opacity-0 transition-all duration-300 group-hover:ml-3 group-hover:max-w-xs group-hover:opacity-100">
               Play
             </span>
           </Link>
@@ -97,7 +97,7 @@ export function Sidebar({ session }: SidebarProps) {
           {/* Deck */}
           <Link
             href="/deck"
-            className={`${isActive("/deck") ? "bg-white/20 ring-2 ring-white/50" : "hover:bg-white/10"} flex w-full items-center justify-center rounded-lg px-6 py-3 transition group-hover:justify-start hover:bg-white/10`}
+            className={`${isActive("/deck") ? "bg-white/20 ring-2 ring-white/50" : "hover:bg-white/10"} flex w-full items-center justify-center rounded-lg px-6 py-3 text-white transition group-hover:justify-start hover:bg-white/10`}
           >
             <svg
               className="h-6 w-6 shrink-0"
@@ -112,7 +112,7 @@ export function Sidebar({ session }: SidebarProps) {
                 d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2m-8 0h8"
               />
             </svg>
-            <span className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:ml-3 group-hover:max-w-xs group-hover:opacity-100">
+            <span className="text white max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:ml-3 group-hover:max-w-xs group-hover:opacity-100">
               Deck
             </span>
           </Link>
@@ -120,7 +120,7 @@ export function Sidebar({ session }: SidebarProps) {
           {/* Settings */}
           <Link
             href="/settings"
-            className={`${isActive("/deck") ? "bg-white/20 ring-2 ring-white/50" : "hover:bg-white/10"} flex w-full items-center justify-center rounded-lg px-6 py-3 transition group-hover:justify-start hover:bg-white/10`}
+            className={`${isActive("/settings") ? "bg-white/20 ring-2 ring-white/50" : "hover:bg-white/10"} flex w-full items-center justify-center rounded-lg px-6 py-3 text-white transition group-hover:justify-start hover:bg-white/10`}
           >
             <svg
               className="h-6 w-6 shrink-0"
@@ -141,7 +141,7 @@ export function Sidebar({ session }: SidebarProps) {
                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <span className="max-w-0 overflow-hidden whitespace-nowrap opacity-0 transition-all duration-300 group-hover:ml-3 group-hover:max-w-xs group-hover:opacity-100">
+            <span className="max-w-0 overflow-hidden whitespace-nowrap text-white opacity-0 transition-all duration-300 group-hover:ml-3 group-hover:max-w-xs group-hover:opacity-100">
               Settings
             </span>
           </Link>
