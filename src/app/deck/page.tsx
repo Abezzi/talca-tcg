@@ -11,10 +11,10 @@ export default async function DeckPage() {
   console.log("shouldn't see this");
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
-      <h1 className="text-4xl font-bold">Deck Page</h1>
-      <p className="mt-4 text-lg">This is your /deck page! It works!</p>
-      <p className="mt-4 text-lg">only works if you are logged in</p>
-    </main>
+    <div className="relative min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <main className="flex min-h-screen flex-col items-center justify-center p-8">
+        <h1 className="text-4xl font-bold">DECK</h1>
+      </main>
+    </div>
   );
 }
