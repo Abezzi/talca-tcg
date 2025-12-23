@@ -49,7 +49,7 @@ export function Sidebar({ session }: SidebarProps) {
                 className="object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-600 to-pink-600">
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-purple-600 to-pink-600">
                 <svg
                   className="h-8 w-8 text-white"
                   fill="none"

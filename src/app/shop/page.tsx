@@ -9,7 +9,7 @@ export default async function DeckPage() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+    <div className="relative min-h-screen bg-linear-to-b from-[#2e026d] to-[#15162c] text-white">
       <main className="flex min-h-screen flex-col items-center justify-center p-8">
         <h1 className="text-4xl font-bold">SHOP</h1>
       </main>

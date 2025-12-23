@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <div className="relative min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+      <div className="relative min-h-screen bg-linear-to-b from-[#2e026d] to-[#15162c] text-white">
         {/* Main Content */}
         <main className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
           <div className="container flex max-w-4xl flex-col items-center justify-center gap-12">
