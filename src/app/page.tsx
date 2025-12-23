@@ -1,8 +1,7 @@
 import Link from "next/link";
-
-import { LatestPost } from "~/app/_components/post";
 import { auth } from "~/server/auth";
 import { api, HydrateClient } from "~/trpc/server";
+import { Sidebar } from "./_components/sidebar";
 
 export default async function Home() {
   const hello = await api.post.hello({ text: "from tRPC" });
@@ -14,56 +13,47 @@ export default async function Home() {
 
   return (
     <HydrateClient>
-      <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-        <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-            Talca <span className="text-[hsl(280,100%,70%)]">TCG</span> Online
-          </h1>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">How to Play →</h3>
-              <div className="text-lg">
-                Just the basics - Everything you need to know to become the
-                greatest player in history.
-              </div>
-            </Link>
-            <Link
-              className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-              href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-              target="_blank"
-            >
-              <h3 className="text-2xl font-bold">Lore →</h3>
-              <div className="text-lg">
-                Read about the history of your favorite characters and the Talca
-                universe.
-              </div>
-            </Link>
-          </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello ? hello.greeting : "Loading tRPC query..."}
-            </p>
+      <div className="relative min-h-screen bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
+        {/* Main Content */}
+        <main className="flex min-h-screen flex-col items-center justify-center px-4 py-16">
+          <div className="container flex max-w-4xl flex-col items-center justify-center gap-12">
+            <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
+              Talca <span className="text-[hsl(280,100%,70%)]">TCG</span> Online
+            </h1>
 
-            <div className="flex flex-col items-center justify-center gap-4">
-              <p className="text-center text-2xl text-white">
-                {session && <span>Logged in as {session.user?.name}</span>}
-              </p>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
               <Link
-                href={session ? "/api/auth/signout" : "/api/auth/signin"}
-                className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+                className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 transition hover:bg-white/20"
+                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                target="_blank"
               >
-                {session ? "Sign out" : "Sign in"}
+                <h3 className="text-2xl font-bold">How to Play →</h3>
+                <div className="text-lg">
+                  Just the basics - Everything you need to know to become the
+                  greatest player in history.
+                </div>
+              </Link>
+              <Link
+                className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 transition hover:bg-white/20"
+                href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                target="_blank"
+              >
+                <h3 className="text-2xl font-bold">Lore →</h3>
+                <div className="text-lg">
+                  Read about the history of your favorite characters and the
+                  Talca universe.
+                </div>
               </Link>
             </div>
-          </div>
 
-          {session?.user && <LatestPost />}
-        </div>
-      </main>
+            <div className="flex flex-col items-center gap-6">
+              <p className="text-2xl">
+                {hello ? hello.greeting : "Loading tRPC query..."}
+              </p>
+            </div>
+          </div>
+        </main>
+      </div>
     </HydrateClient>
   );
 }

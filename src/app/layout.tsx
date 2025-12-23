@@ -4,6 +4,8 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { Sidebar } from "./_components/sidebar";
+import { SessionProvider } from "./_components/session-provider";
 
 export const metadata: Metadata = {
   title: "Talca TCG",
@@ -22,7 +24,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <TRPCReactProvider>
+          <SessionProvider>
+            <div className="relative flex min-h-screen">
+              <main className="flex-1 transition-all duration-300">
+                {children}
+              </main>
+            </div>
+          </SessionProvider>
+        </TRPCReactProvider>
       </body>
     </html>
   );
