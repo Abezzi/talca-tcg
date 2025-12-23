@@ -4,7 +4,6 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "~/trpc/react";
-import { Sidebar } from "./_components/sidebar";
 import { SessionProvider } from "./_components/session-provider";
 
 export const metadata: Metadata = {
