@@ -8,7 +8,7 @@ export function ShoppingCartIcon({
       className={className}
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
+      strokeWidth="2"
       viewBox="0 0 24 24"
     >
       <circle cx="8" cy="21" r="1" />
