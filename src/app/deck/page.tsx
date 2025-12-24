@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "~/server/auth";
+import DeckBuilderClient from "~/app/_components/deck/deck-builder-client";
 
 export default async function DeckPage() {
   const session = await auth();
@@ -8,13 +9,5 @@ export default async function DeckPage() {
     redirect("/");
   }
 
-  console.log("shouldn't see this");
-
-  return (
-    <div className="relative min-h-screen bg-linear-to-b from-[#2e026d] to-[#15162c] text-white">
-      <main className="flex min-h-screen flex-col items-center justify-center p-8">
-        <h1 className="text-4xl font-bold">DECK</h1>
-      </main>
-    </div>
-  );
+  return <DeckBuilderClient />;
 }
