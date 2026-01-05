@@ -7,6 +7,7 @@ import { ScrollArea } from "~/app/_components/ui/scroll-area";
 import { Separator } from "~/app/_components/ui/separator";
 import { Search } from "lucide-react";
 import type { Card } from "~/types/card";
+import { motion, AnimatePresence } from "motion/react";
 
 const allCards: Card[] = [
   // TODO: load from backend
@@ -118,75 +119,98 @@ export default function DeckBuilderClient() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {Object.entries(deckCardCounts).map(([cardIdStr, count]) => {
-                  const cardId = Number(cardIdStr);
-                  // Find the card object from allCards (or from deckCards — both work)
-                  const card =
-                    allCards.find((c) => c.id === cardId) ??
-                    deckCards.find((c) => c.id === cardId);
+                <AnimatePresence mode="popLayout">
+                  {Object.entries(deckCardCounts).map(([cardIdStr, count]) => {
+                    const cardId = Number(cardIdStr);
+                    // Find the card object from allCards (or from deckCards — both work)
+                    const card =
+                      allCards.find((c) => c.id === cardId) ??
+                      deckCards.find((c) => c.id === cardId);
 
-                  if (!card) return null;
+                    if (!card) return null;
 
-                  return (
-                    <div
-                      key={card.id}
-                      className="group relative"
-                      // Click removes ONE copy
-                      onClick={() => {
-                        const cardId = card.id;
-                        const currentCount = deckCardCounts[cardId] ?? 0;
-                        const newCount = currentCount - 1;
+                    return (
+                      <motion.div
+                        key={card.id}
+                        layout
+                        initial={{ opacity: 0, rotate: -15, y: 100, x: -50 }}
+                        animate={{ opacity: 1, rotate: 0, y: 0, x: 0 }}
+                        exit={{ opacity: 1, scale: 0.8, y: -30 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 350,
+                          damping: 25,
+                        }}
+                        className="group relative"
+                        // Click removes ONE copy
+                        onClick={() => {
+                          const cardId = card.id;
+                          const currentCount = deckCardCounts[cardId] ?? 0;
+                          const newCount = currentCount - 1;
 
-                        if (currentCount <= 0) return; // safety guard
+                          if (currentCount <= 0) return; // safety guard
 
-                        // Find and remove one instance from the deckCards array
-                        const index = deckCards.findIndex(
-                          (c) => c.id === card.id,
-                        );
+                          // Find and remove one instance from the deckCards array
+                          const index = deckCards.findIndex(
+                            (c) => c.id === card.id,
+                          );
 
-                        if (index === -1) return;
+                          if (index === -1) return;
 
-                        setDeckCards(deckCards.filter((_, i) => i !== index));
+                          setDeckCards(deckCards.filter((_, i) => i !== index));
 
-                        // Update counts
-                        setDeckCardCounts((prev) => {
-                          if (newCount <= 0) {
-                            const newCounts = { ...prev };
-                            delete newCounts[card.id];
-                            return newCounts;
-                          }
-                          return {
-                            ...prev,
-                            [card.id]: newCount,
-                          };
-                        });
-                      }}
-                    >
-                      <div className="aspect-3/4 cursor-pointer rounded-lg border-2 border-purple-700 bg-gray-900 transition-all hover:border-red-600">
-                        <div className="flex h-full flex-col items-center justify-center p-2">
-                          <div className="line-clamp-2 text-center text-sm font-semibold">
-                            {card.name}
+                          // Update counts
+                          setDeckCardCounts((prev) => {
+                            if (newCount <= 0) {
+                              const newCounts = { ...prev };
+                              delete newCounts[card.id];
+                              return newCounts;
+                            }
+                            return {
+                              ...prev,
+                              [card.id]: newCount,
+                            };
+                          });
+                        }}
+                      >
+                        <div className="aspect-3/4 cursor-pointer rounded-lg border-2 border-purple-700 bg-gray-900 transition-all hover:border-red-600">
+                          <div className="flex h-full flex-col items-center justify-center p-2">
+                            <div className="line-clamp-2 text-center text-sm font-semibold">
+                              {card.name}
+                            </div>
+                            <div className="mt-1 text-xs text-purple-400">
+                              Mana: {card.mana}
+                            </div>
                           </div>
-                          <div className="mt-1 text-xs text-purple-400">
-                            Mana: {card.mana}
+
+                          {/* Count Badge - only show if > 1 */}
+                          {count > 1 && (
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{
+                                duration: 0.4,
+                                scale: {
+                                  type: "spring",
+                                  visualDuration: 0.4,
+                                  bounce: 0.5,
+                                },
+                              }}
+                              className="absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center rounded-full bg-purple-800/90 text-sm font-bold text-white shadow-lg"
+                            >
+                              x{count}
+                            </motion.div>
+                          )}
+
+                          {/* Remove Overlay */}
+                          <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-red-900/70 opacity-0 transition-opacity group-hover:opacity-100">
+                            <span className="font-bold text-white">Remove</span>
                           </div>
                         </div>
-
-                        {/* Count Badge - only show if > 1 */}
-                        {count > 1 && (
-                          <div className="absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center rounded-full bg-purple-800/90 text-sm font-bold text-white shadow-lg">
-                            x{count}
-                          </div>
-                        )}
-
-                        {/* Remove Overlay */}
-                        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-red-900/70 opacity-0 transition-opacity group-hover:opacity-100">
-                          <span className="font-bold text-white">Remove</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
+                      </motion.div>
+                    );
+                  })}
+                </AnimatePresence>
               </div>
             )}
 
