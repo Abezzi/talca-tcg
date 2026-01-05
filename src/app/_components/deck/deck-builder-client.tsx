@@ -6,13 +6,7 @@ import { Button } from "~/app/_components/ui/button";
 import { ScrollArea } from "~/app/_components/ui/scroll-area";
 import { Separator } from "~/app/_components/ui/separator";
 import { Search } from "lucide-react";
-
-type Card = {
-  id: number;
-  name: string;
-  mana: number;
-  image: string;
-};
+import type { Card } from "~/types/card";
 
 const allCards: Card[] = [
   // TODO: load from backend
