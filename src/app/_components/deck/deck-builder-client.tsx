@@ -31,19 +31,28 @@ export default function DeckBuilderClient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [deckName, setDeckName] = useState("My Awesome Deck");
   const [deckCards, setDeckCards] = useState<typeof allCards>([]);
+  const [deckCardCounts, setDeckCardCounts] = useState<Record<number, number>>(
+    {},
+  );
 
   const filteredCards = allCards.filter((card) =>
     card.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
-  const addToDeck = (card: (typeof allCards)[0]) => {
+  const addToDeck = (card: Card) => {
     // Simple limit: max 60 cards, allow duplicates if your game rules permit
     if (deckCards.length >= 60) return;
-    setDeckCards([...deckCards, card]);
-  };
 
-  const removeFromDeck = (index: number) => {
-    setDeckCards(deckCards.filter((_, i) => i !== index));
+    // Max duplicates limited to 3
+    const currentCount = deckCardCounts[card.id] ?? 0;
+    if (currentCount >= 3) {
+      // TODO: add shake animation to tell the user that reached the max amount of cards with that id instad of console log, plus, an alert message on the top of the screen
+      console.log("already has 3");
+      return;
+    }
+
+    setDeckCards([...deckCards, card]);
+    setDeckCardCounts({ ...deckCardCounts, [card.id]: currentCount + 1 });
   };
 
   return (
@@ -90,14 +99,17 @@ export default function DeckBuilderClient() {
         <main className="p-6 lg:col-span-3 lg:p-12">
           <div className="mx-auto max-w-5xl">
             {/* Deck Name */}
-            <div className="mb-8">
+            <div className="mb-8 flex flex-row gap-2">
               <Input
                 value={deckName}
                 onChange={(e) => setDeckName(e.target.value)}
-                className="border-none bg-transparent p-0 text-3xl font-bold underline-offset-4 focus:underline focus:ring-0"
+                className="border-none bg-transparent p-2 font-bold underline-offset-4 focus:underline focus:ring-0"
                 placeholder="Enter deck name..."
+                style={{ fontSize: "2rem" }}
               />
-              <p className="mt-2 text-sm text-gray-400">
+              <p
+                className={`align-bottom text-lg text-nowrap ${deckCards.length < 40 ? "text-gray-400" : ""}`}
+              >
                 {deckCards.length} / 60 cards
               </p>
             </div>
@@ -112,27 +124,75 @@ export default function DeckBuilderClient() {
               </div>
             ) : (
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-                {deckCards.map((card, index) => (
-                  <div
-                    key={`${card.id}-${index}`}
-                    className="group relative"
-                    onClick={() => removeFromDeck(index)}
-                  >
-                    <div className="aspect-3/4 cursor-pointer rounded-lg border-2 border-purple-700 bg-gray-900 transition-all hover:border-red-600">
-                      <div className="flex h-full flex-col items-center justify-center p-2">
-                        <div className="line-clamp-2 text-center text-sm font-semibold">
-                          {card.name}
+                {Object.entries(deckCardCounts).map(([cardIdStr, count]) => {
+                  const cardId = Number(cardIdStr);
+                  // Find the card object from allCards (or from deckCards — both work)
+                  const card =
+                    allCards.find((c) => c.id === cardId) ??
+                    deckCards.find((c) => c.id === cardId);
+
+                  if (!card) return null;
+
+                  return (
+                    <div
+                      key={card.id}
+                      className="group relative"
+                      // Click removes ONE copy
+                      onClick={() => {
+                        const cardId = card.id;
+                        const currentCount = deckCardCounts[cardId] ?? 0;
+                        const newCount = currentCount - 1;
+
+                        if (currentCount <= 0) return; // safety guard
+
+                        // Find and remove one instance from the deckCards array
+                        const index = deckCards.findIndex(
+                          (c) => c.id === card.id,
+                        );
+
+                        if (index === -1) return;
+
+                        setDeckCards(deckCards.filter((_, i) => i !== index));
+
+                        // Update counts
+                        setDeckCardCounts((prev) => {
+                          if (newCount <= 0) {
+                            const newCounts = { ...prev };
+                            delete newCounts[card.id];
+                            return newCounts;
+                          }
+                          return {
+                            ...prev,
+                            [card.id]: newCount,
+                          };
+                        });
+                      }}
+                    >
+                      <div className="aspect-3/4 cursor-pointer rounded-lg border-2 border-purple-700 bg-gray-900 transition-all hover:border-red-600">
+                        <div className="flex h-full flex-col items-center justify-center p-2">
+                          <div className="line-clamp-2 text-center text-sm font-semibold">
+                            {card.name}
+                          </div>
+                          <div className="mt-1 text-xs text-purple-400">
+                            Mana: {card.mana}
+                          </div>
                         </div>
-                        <div className="mt-1 text-xs text-purple-400">
-                          Mana: {card.mana}
+
+                        {/* Count Badge - only show if > 1 */}
+                        {count > 1 && (
+                          <div className="absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center rounded-full bg-purple-800/90 text-sm font-bold text-white shadow-lg">
+                            x{count}
+                          </div>
+                        )}
+
+                        {/* Remove Overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-red-900/70 opacity-0 transition-opacity group-hover:opacity-100">
+                          <span className="font-bold text-white">Remove</span>
                         </div>
-                      </div>
-                      <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-red-900/70 opacity-0 transition-opacity group-hover:opacity-100">
-                        <span className="font-bold text-white">Remove</span>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
